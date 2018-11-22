@@ -166,4 +166,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\Default-Portrait%402x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ico_menu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ico_menu%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ico_menu%403x.png" />
+  </ItemGroup>
 </Project>

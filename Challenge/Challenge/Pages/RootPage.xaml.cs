@@ -1,14 +1,13 @@
 ﻿using Challenge.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
-using Xamarin.Forms;
 
 namespace Challenge.Pages
 {
-    [MvxMasterDetailPagePresentation(NoHistory = true)]
-    public partial class ReposPage : MvxContentPage<ReposViewModel>
+    [MvxMasterDetailPagePresentation(MasterDetailPosition.Root, WrapInNavigationPage = false)]
+    public partial class RootPage : MvxMasterDetailPage<RootViewModel>
     {
-        public ReposPage()
+        public RootPage()
         {
             InitializeComponent();
         }

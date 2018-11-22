@@ -12,7 +12,7 @@ namespace Challenge
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
-            RegisterAppStart<ReposViewModel>();
+            RegisterAppStart<RootViewModel>();
         }
     }
 }

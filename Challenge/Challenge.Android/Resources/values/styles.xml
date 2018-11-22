@@ -21,6 +21,8 @@
          colorControlHighlight and colorSwitchThumbNormal. -->
     <item name="windowActionModeOverlay">true</item>
 
+    <item name="android:statusBarColor">#000000</item>
+
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
   </style>
 
@@ -32,6 +34,6 @@
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
     <item name="android:colorBackground">@color/launcher_background</item>
-    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:windowDrawsSystemBarBackgrounds">false</item>
   </style>
 </resources>

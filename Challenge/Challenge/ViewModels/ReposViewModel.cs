@@ -1,21 +1,20 @@
 ﻿using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 
 namespace Challenge.ViewModels
 {
     public class ReposViewModel : MvxViewModel
     {
-        public IMvxCommand ResetTextCommand => new MvxCommand(ResetText);
-        private void ResetText()
-        {
-            Text = "Hello MvvmCross";
-        }
+        private readonly IMvxNavigationService _navigationService;
 
-        private string _text = "Hello MvvmCross";
-        public string Text
+        public string Title => Resources.Texts.MainPageTitle;
+
+        public IMvxCommand OpenPullRequestsCommand => new MvxAsyncCommand(async () => { await _navigationService.Navigate<PullRequestsViewModel>(); });
+
+        public ReposViewModel(IMvxNavigationService navigationService)
         {
-            get => _text;
-            set => SetProperty(ref _text, value);
+            _navigationService = navigationService;
         }
     }
 }

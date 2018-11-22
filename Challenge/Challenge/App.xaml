@@ -3,5 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Challenge.App">
     <Application.Resources>
+        <Color x:Key="BarBackgroundColor">#94BD6F</Color>
+        <Color x:Key="BarTextColor">#FFFFFF</Color>
+        <Style ApplyToDerivedTypes="true" TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="{StaticResource BarBackgroundColor}"/>
+            <Setter Property="BarTextColor" Value="{StaticResource BarTextColor}"/>
+        </Style>
     </Application.Resources>
 </Application>

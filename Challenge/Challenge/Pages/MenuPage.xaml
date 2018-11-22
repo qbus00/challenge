@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<views:MvxContentPage 
-             x:TypeArguments="viewModels:ReposViewModel"
-             xmlns="http://xamarin.com/schemas/2014/forms"
+<views:MvxContentPage
+             x:TypeArguments="viewModels:MenuViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
              xmlns:viewModels="clr-namespace:Challenge.ViewModels;assembly=Challenge"
              xmlns:blend="http://schemas.microsoft.com/expression/blend/2008"
-             x:DataContext="{blend:DesignInstance viewModels:ReposViewModel}"
+             x:DataContext="{blend:DesignInstance viewModels:MenuViewModel}"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             x:Class="Challenge.Pages.ReposPage"
+             x:Class="Challenge.Pages.MenuPage"
              Title="{Binding Title}"
              Icon="ico_menu.png">
-    <Grid>
+    <ContentPage.Content>
         <StackLayout>
-            <Button Text="Pull Requests" Command="{Binding OpenPullRequestsCommand}"></Button>
+            <Label Text="Welcome to GitHub Awesome!"
+                TextColor="Black"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
         </StackLayout>
-    </Grid>
+    </ContentPage.Content>
 </views:MvxContentPage>
