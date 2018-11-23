@@ -83,7 +83,7 @@ namespace Challenge.ViewModels
                 .DistinctUntilChanged()
                 .Select(searchPhrase => Observable.FromAsync(async token =>
                 {
-                    RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.Delay(TimeSpan.FromHours(1), token); });
+                    RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.Delay(TimeSpan.FromMinutes(1), token); });
                     var result = await GetRepositories(searchPhrase, 1, token);
                     return result;
                 })).Switch().Subscribe(response =>
