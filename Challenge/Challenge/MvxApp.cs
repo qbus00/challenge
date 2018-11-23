@@ -1,6 +1,10 @@
-﻿using Challenge.ViewModels;
-using MvvmCross.IoC;
+﻿using System;
+using System.Reflection;
+using Challenge.ViewModels;
+using MvvmCross;
 using MvvmCross.ViewModels;
+using Refit.Insane.PowerPack.Configuration;
+using Refit.Insane.PowerPack.Services;
 
 namespace Challenge
 {
@@ -8,10 +12,12 @@ namespace Challenge
     {
         public override void Initialize()
         {
-            CreatableTypes()
-                .EndingWith("Service")
-                .AsInterfaces()
-                .RegisterAsLazySingleton();
+            BaseApiConfiguration.ApiUri = new Uri("https://api.github.com");
+            Mvx.IoCProvider.RegisterType(() =>
+            {
+                var restServiceBuilder = new RestServiceBuilder();
+                return restServiceBuilder.BuildRestService(typeof(MvxApp).GetTypeInfo().Assembly);
+            });
             RegisterAppStart<RootViewModel>();
         }
     }
