@@ -37,7 +37,7 @@
                     <SearchBar x:Name="SearchBar"
                         Text="{Binding SearchPhrase}"
                         BackgroundColor="{StaticResource SearchBackgroundColor}"
-                        HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                        HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </Frame>
                 <incrementalLoading:IncrementalListView
                     x:Name="RepoListView"
@@ -45,7 +45,7 @@
                     IsVisible="{Binding RepositoriesLoadTask.IsSuccessfullyCompleted}"
                     ItemsSource="{Binding Repositories}" 
                     HorizontalOptions="Fill"
-                    VerticalOptions="EndAndExpand"
+                    VerticalOptions="StartAndExpand"
                     RowHeight="100">
                     <ListView.ItemTemplate>
                         <DataTemplate>

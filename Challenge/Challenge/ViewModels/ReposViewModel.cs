@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 using Challenge.IncrementalLoading;
 using Challenge.Model;
 using Challenge.Rest;
-using Challenge.Threading;
 using MvvmCross.Commands;
-using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Refit.Insane.PowerPack.Data;
 using Refit.Insane.PowerPack.Services;
+using Xamarin.Forms;
 
 namespace Challenge.ViewModels
 {
     public class ReposViewModel : MvxViewModel, ISupportIncrementalLoading
     {
         private readonly IRestService _restService;
-        private readonly IMvxNavigationService _navigationService;
         private IDisposable _searchObservable;
 
         private string _searchPhrase = string.Empty;
@@ -73,8 +71,6 @@ namespace Challenge.ViewModels
             _searchObservable?.Dispose();
         }
 
-
-        AsyncAutoResetEvent _isSearching = new AsyncAutoResetEvent();
         private void SetupSearch()
         {
             _searchObservable = Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
@@ -83,31 +79,34 @@ namespace Challenge.ViewModels
                 .ObserveOn(SynchronizationContext.Current)
                 .Where(pattern => pattern.EventArgs.PropertyName == nameof(SearchPhrase))
                 .Select(pattern => SearchPhrase.Trim(' ', '\t'))
-                .Throttle(TimeSpan.FromMilliseconds(300))
+                .Throttle(TimeSpan.FromMilliseconds(Constants.SearchThrottlingInMiliseconds))
                 .DistinctUntilChanged()
                 .Select(searchPhrase => Observable.FromAsync(async token =>
                 {
-                    RepositoriesLoadTask = MvxNotifyTask.Create(() =>
-                    {
-                        if (RepositoriesLoadTask.IsNotCompleted)
-                        {
-                            _isSearching?.Set();
-                        }
-                        _isSearching = new AsyncAutoResetEvent();
-                        return _isSearching.WaitAsync();
-                    });
+                    RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.Delay(TimeSpan.FromHours(1), token); });
                     var result = await GetRepositories(searchPhrase, 1, token);
                     return result;
                 })).Switch().Subscribe(response =>
                 {
-                    _isSearching?.Set();
-                    _isSearching = null;
                     if (response.IsSuccess)
                     {
                         ResetPageCounters();
                         Repositories = new MvxObservableCollection<Repository>(response.Results.Items);
                         _totalCount = response.Results.TotalCount;
                         HasMoreItems = _totalCount > Constants.RefitPerPage;
+                        if (Repositories?.Count > 0)
+                        {
+                            MessagingCenter.Send(Repositories[0], Constants.ScrollToTopMessage);
+                        }
+
+                        RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.FromResult(0); });
+                    }
+                    else
+                    {
+                        ResetPageCounters();
+                        Repositories = new MvxObservableCollection<Repository>();
+                        _totalCount = 0;
+                        RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.FromException(new Exception(response.FormattedErrorMessages)); });
                     }
                 });
         }
@@ -117,9 +116,8 @@ namespace Challenge.ViewModels
 
         public string Title => Resources.Texts.MainPageTitle;
 
-        public ReposViewModel(IMvxNavigationService navigationService, IRestService restService)
+        public ReposViewModel(IRestService restService)
         {
-            _navigationService = navigationService;
             _restService = restService;
         }
 
@@ -145,17 +143,25 @@ namespace Challenge.ViewModels
             }
         }
 
-        private async Task<Response<ItemsCollection<Repository>>> GetRepositories(string searchPhrase, int page, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<Response<ItemsCollection<Repository>>> GetRepositories(string searchPhrase, int page,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            var cacheKey = new QueryCacheKey {Page = page, SearchPhrase = searchPhrase}.ToString();
-            var response =
-                await _restService.Execute<IGitHubApi, ItemsCollection<Repository>>(
-                    api => api.GetRepositories(
-                        cacheKey,
-                        page,
-                        searchPhrase,
-                        cancellationToken));
-            return response;
+            try
+            {
+                var cacheKey = new QueryCacheKey {Page = page, SearchPhrase = searchPhrase}.ToString();
+                var response =
+                    await _restService.Execute<IGitHubApi, ItemsCollection<Repository>>(
+                        api => api.GetRepositories(
+                            cacheKey,
+                            page,
+                            searchPhrase,
+                            cancellationToken));
+                return response;
+            }
+            catch (Exception e)
+            {
+                return new Response<ItemsCollection<Repository>>().AddErrorMessage(e.Message).SetAsFailureResponse();
+            }
         }
 
         private void ResetPageCounters()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Challenge.Threading
@@ -25,6 +26,10 @@ namespace Challenge.Threading
             }
         }
 
+        public void Throw(string error)
+        {
+            throw new Exception(error);
+        }
         public void Set()
         {
             TaskCompletionSource<bool> toRelease = null;
