@@ -30,33 +30,42 @@
                        VerticalOptions="CenterAndExpand" 
                        HorizontalOptions="CenterAndExpand" />
             </StackLayout>
-            <incrementalLoading:IncrementalListView
-                      PreloadCount="10"
-                      AbsoluteLayout.LayoutBounds="0,0,1,1" 
-                      AbsoluteLayout.LayoutFlags="All"
-                      IsVisible="{Binding RepositoriesLoadTask.IsSuccessfullyCompleted}"
-                      ItemsSource="{Binding Repositories}" 
-                      HorizontalOptions="Fill"
-                      VerticalOptions="Fill"
-                      RowHeight="100">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Orientation="Vertical"
-                                         Padding="10">
-                                <Label Text="{Binding Name}" TextColor="DeepSkyBlue" FontSize="Large" LineBreakMode="TailTruncation" WidthRequest="400"/>
-                                <Label Text="{Binding Description}" TextColor="DarkGray" FontSize="Medium" LineBreakMode="TailTruncation" WidthRequest="400"/>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.Footer>
-                    <ActivityIndicator 
-                                       Color="{StaticResource BarBackgroundColor}"
-                                       IsRunning="{Binding LoadMoreTask.IsNotCompleted}" 
-                                       IsVisible="{Binding LoadMoreTask.IsNotCompleted}"/>
-                </ListView.Footer>
-            </incrementalLoading:IncrementalListView>
+            <StackLayout Orientation="Vertical"
+                         AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                         AbsoluteLayout.LayoutFlags="All">
+                <Frame Padding="10,0,0,10" BackgroundColor="{StaticResource SearchBackgroundColor}" HorizontalOptions="Fill" VerticalOptions="Start">
+                    <SearchBar x:Name="SearchBar"
+                        Text="{Binding SearchPhrase}"
+                        BackgroundColor="{StaticResource SearchBackgroundColor}"
+                        HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                </Frame>
+                <incrementalLoading:IncrementalListView
+                    x:Name="RepoListView"
+                    PreloadCount="10"
+                    IsVisible="{Binding RepositoriesLoadTask.IsSuccessfullyCompleted}"
+                    ItemsSource="{Binding Repositories}" 
+                    HorizontalOptions="Fill"
+                    VerticalOptions="EndAndExpand"
+                    RowHeight="100">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Orientation="Vertical"
+                                             Padding="10">
+                                    <Label Text="{Binding Name}" TextColor="DeepSkyBlue" FontSize="Large" LineBreakMode="TailTruncation" WidthRequest="400"/>
+                                    <Label Text="{Binding Description}" TextColor="DarkGray" FontSize="Medium" LineBreakMode="TailTruncation" WidthRequest="400"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Footer>
+                        <ActivityIndicator 
+                            Color="{StaticResource BarBackgroundColor}"
+                            IsRunning="{Binding LoadMoreTask.IsNotCompleted}" 
+                            IsVisible="{Binding LoadMoreTask.IsNotCompleted}"/>
+                    </ListView.Footer>
+                </incrementalLoading:IncrementalListView>
+            </StackLayout>
         </AbsoluteLayout>
     </ContentPage.Content>
 </views:MvxContentPage>

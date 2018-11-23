@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Challenge.App">
     <Application.Resources>
+        <Color x:Key="SearchBackgroundColor">#E7E7E7</Color>
         <Color x:Key="BarBackgroundColor">#94BD6F</Color>
         <Color x:Key="BarTextColor">#FFFFFF</Color>
         <Style ApplyToDerivedTypes="true" TargetType="NavigationPage">

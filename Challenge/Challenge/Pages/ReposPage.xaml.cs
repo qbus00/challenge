@@ -1,4 +1,5 @@
-﻿using Challenge.ViewModels;
+﻿using System.Reactive.Linq;
+using Challenge.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Xamarin.Forms;
@@ -11,6 +12,7 @@ namespace Challenge.Pages
         public ReposPage()
         {
             InitializeComponent();
+            SearchBar.Placeholder = Challenge.Resources.Texts.SearchPlaceholder;
         }
     }
 }
