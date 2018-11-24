@@ -2,7 +2,7 @@
 
 namespace Challenge.Model
 {
-    public class Owner
+    public class User
     {
         [JsonProperty("id")]
         public int Id { get; set; }

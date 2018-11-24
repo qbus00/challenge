@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Challenge.Model;
+﻿using System.ComponentModel;
 using Challenge.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
@@ -16,6 +13,7 @@ namespace Challenge.Pages
         {
             InitializeComponent();
             SearchBar.Placeholder = Challenge.Resources.Texts.SearchPlaceholder;
+            NoResultsFoundLabel.Text = Challenge.Resources.Texts.NoResultsFound;
         }
 
         private void RepoListView_OnPropertyChanged(object sender, PropertyChangedEventArgs e)

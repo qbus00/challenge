@@ -33,12 +33,19 @@
             <StackLayout Orientation="Vertical"
                          AbsoluteLayout.LayoutBounds="0,0,1,1" 
                          AbsoluteLayout.LayoutFlags="All">
-                <Frame Padding="10,0,0,10" BackgroundColor="{StaticResource SearchBackgroundColor}" HorizontalOptions="Fill" VerticalOptions="Start">
+                <Frame Padding="10,0,0,10" BackgroundColor="{StaticResource SearchBackgroundColor}"
+                       HorizontalOptions="Fill" VerticalOptions="Start">
                     <SearchBar x:Name="SearchBar"
                         Text="{Binding SearchPhrase}"
                         BackgroundColor="{StaticResource SearchBackgroundColor}"
                         HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </Frame>
+                <Label x:Name="NoResultsFoundLabel"
+                       IsVisible="{Binding Repositories, Converter={StaticResource CollectionToIsEmptyValueConverter}}"
+                       TextColor="Black"
+                       FontSize="24"
+                       VerticalOptions="Start"
+                       HorizontalOptions="CenterAndExpand" />
                 <incrementalLoading:IncrementalListView
                     x:Name="RepoListView"
                     PreloadCount="10"
@@ -47,6 +54,7 @@
                     ItemsSource="{Binding Repositories}" 
                     HorizontalOptions="Fill"
                     VerticalOptions="StartAndExpand"
+                    ItemClickCommand="{Binding GotoPullRequestsCommand}"
                     RowHeight="100">
                     <ListView.ItemTemplate>
                         <DataTemplate>

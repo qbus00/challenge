@@ -8,8 +8,64 @@
     xmlns:blend="http://schemas.microsoft.com/expression/blend/2008"
     x:DataContext="{blend:DesignInstance viewModels:PullRequestsViewModel}"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:incrementalLoading="clr-namespace:Challenge.IncrementalLoading;assembly=Challenge"
     x:Class="Challenge.Pages.PullRequestsPage"
-    Title="{Binding Title}">
-    <Grid>
-    </Grid>
+    Title="{Binding Repository.Name}">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <ActivityIndicator 
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1"
+                    IsVisible="{Binding PullRequestsLoadTask.IsNotCompleted}"
+                    IsRunning="{Binding PullRequestsLoadTask.IsNotCompleted}"
+                    Color="{StaticResource BarBackgroundColor}"/>
+            <StackLayout 
+                IsVisible="{Binding PullRequestsLoadTask.IsFaulted}"
+                AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                AbsoluteLayout.LayoutFlags="All">
+                <Label Text="{Binding PullRequestsLoadTask.ErrorMessage}"
+                       TextColor="Black"
+                       FontSize="24"
+                       VerticalOptions="CenterAndExpand" 
+                       HorizontalOptions="CenterAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Vertical"
+                         AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                         AbsoluteLayout.LayoutFlags="All">
+                <Label x:Name="NoResultsFoundLabel"
+                       IsVisible="{Binding PullRequests, Converter={StaticResource CollectionToIsEmptyValueConverter}}"
+                       TextColor="Black"
+                       FontSize="24"
+                       VerticalOptions="Start"
+                       HorizontalOptions="CenterAndExpand" />
+                <incrementalLoading:IncrementalListView
+                    x:Name="RepoListView"
+                    PreloadCount="10"
+                    IsVisible="{Binding PullRequestsLoadTask.IsSuccessfullyCompleted}"
+                    ItemClickCommand="{Binding OpenPullRequestsInBrowserCommand}"
+                    ItemsSource="{Binding PullRequests}" 
+                    HorizontalOptions="Fill"
+                    VerticalOptions="StartAndExpand"
+                    RowHeight="100">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Orientation="Vertical"
+                                             Padding="10">
+                                    <Label Text="{Binding Title}" TextColor="DeepSkyBlue" FontSize="Large" LineBreakMode="TailTruncation" WidthRequest="400"/>
+                                    <Label Text="{Binding User.Login}" TextColor="DarkGray" FontSize="Medium" LineBreakMode="TailTruncation" WidthRequest="400"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Footer>
+                        <ActivityIndicator 
+                            Color="{StaticResource BarBackgroundColor}"
+                            IsRunning="{Binding LoadMoreTask.IsNotCompleted}" 
+                            IsVisible="{Binding LoadMoreTask.IsNotCompleted}"/>
+                    </ListView.Footer>
+                </incrementalLoading:IncrementalListView>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
 </views:MvxContentPage>

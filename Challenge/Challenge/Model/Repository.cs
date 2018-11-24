@@ -23,6 +23,6 @@ namespace Challenge.Model
         public int StargazersCount { get; set; }
 
         [JsonProperty("owner")]
-        public Owner Owner { get; set; }
+        public User Owner { get; set; }
     }
 }

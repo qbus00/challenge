@@ -120,6 +120,9 @@
   <data name="MainPageTitle" xml:space="preserve">
     <value>GitHub Awesome</value>
   </data>
+  <data name="NoResultsFound" xml:space="preserve">
+    <value>No results found</value>
+  </data>
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Search</value>
   </data>

@@ -7,6 +7,7 @@ using Challenge.IncrementalLoading;
 using Challenge.Model;
 using Challenge.Rest;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Nito.AsyncEx;
 using Refit.Insane.PowerPack.Data;
@@ -18,6 +19,7 @@ namespace Challenge.ViewModels
     {
         private readonly IRestService _restService;
         private IDisposable _searchObservable;
+        private readonly IMvxNavigationService _navigationService;
 
         private string _searchPhrase = string.Empty;
         public string SearchPhrase
@@ -112,14 +114,18 @@ namespace Challenge.ViewModels
                 });
         }
 
+        public IMvxCommand GotoPullRequestsCommand => new MvxCommand<Repository>(
+            repository => { _navigationService.Navigate<PullRequestsViewModel, Repository>(repository); });
+
         public IMvxCommand LoadMoreItemsCommand => new MvxCommand(
             () => { LoadMoreTask = MvxNotifyTask.Create(async () => await LoadMoreItems()); });
 
         public string Title => Resources.Texts.MainPageTitle;
 
-        public ReposViewModel(IRestService restService)
+        public ReposViewModel(IRestService restService, IMvxNavigationService navigationService)
         {
             _restService = restService;
+            _navigationService = navigationService;
         }
 
         public override void Prepare()
@@ -149,12 +155,14 @@ namespace Challenge.ViewModels
         {
             try
             {
+                var perPage = Constants.RefitPerPage;
                 var cacheKey = new QueryCacheKey {Page = page, SearchPhrase = searchPhrase}.ToString();
                 var response =
                     await _restService.Execute<IGitHubApi, ItemsCollection<Repository>>(
                         api => api.GetRepositories(
                             cacheKey,
                             page,
+                            perPage,
                             searchPhrase,
                             cancellationToken));
                 return response;

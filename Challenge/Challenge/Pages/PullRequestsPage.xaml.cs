@@ -11,6 +11,7 @@ namespace Challenge.Pages
 		public PullRequestsPage ()
 		{
 			InitializeComponent ();
-		}
-	}
+		    NoResultsFoundLabel.Text = Challenge.Resources.Texts.NoResultsFound;
+        }
+    }
 }

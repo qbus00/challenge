@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="MvvmCross" Version="6.2.2" />
     <PackageReference Include="MvvmCross.Forms" Version="6.2.2" />
+    <PackageReference Include="MvvmCross.Plugin.WebBrowser" Version="6.2.2" />
     <PackageReference Include="Nito.AsyncEx" Version="4.0.1" />
     <PackageReference Include="Refit" Version="4.6.48" />
     <PackageReference Include="Refit.Insane.PowerPack" Version="1.0.4" />
@@ -43,5 +44,23 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Texts.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Pages\MenuPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Pages\PullRequestsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Pages\ReposPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Pages\RootPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 </Project>

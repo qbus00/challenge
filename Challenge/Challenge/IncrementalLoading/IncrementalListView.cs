@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Challenge.IncrementalLoading
@@ -14,6 +15,7 @@ namespace Challenge.IncrementalLoading
         public IncrementalListView()
         {
             ItemAppearing += OnItemAppearing;
+            ItemTapped += OnItemTapped;
         }
 
         public IncrementalListView(ListViewCachingStrategy cachingStrategy)
@@ -92,6 +94,25 @@ namespace Challenge.IncrementalLoading
         {
             get => (int) GetValue(PreloadCountProperty);
             set => SetValue(PreloadCountProperty, value);
+        }
+
+
+        public static readonly BindableProperty ItemClickCommandProperty =
+            BindableProperty.Create(nameof(ItemClickCommand), typeof(ICommand), typeof(IncrementalListView));
+
+        public ICommand ItemClickCommand
+        {
+            get => (ICommand) GetValue(ItemClickCommandProperty);
+            set => SetValue(ItemClickCommandProperty, value);
+        }
+
+        private void OnItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item != null && ItemClickCommand != null && ItemClickCommand.CanExecute(e))
+            {
+                ItemClickCommand.Execute(e.Item);
+                SelectedItem = null;
+            }
         }
     }
 }
