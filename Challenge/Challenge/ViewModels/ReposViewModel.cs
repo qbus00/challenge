@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using MvvmCross.ViewModels;
 using Nito.AsyncEx;
 using Refit.Insane.PowerPack.Data;
 using Refit.Insane.PowerPack.Services;
+using Xamarin.Forms;
 
 namespace Challenge.ViewModels
 {
@@ -85,34 +87,51 @@ namespace Challenge.ViewModels
                 .DistinctUntilChanged()
                 .Select(searchPhrase => Observable.FromAsync(async token =>
                 {
-                    var resetEvent = new AsyncAutoResetEvent();
+                    var searchDoneEvent = new AsyncAutoResetEvent();
+                    var itemsChangedDoneEvent = new AsyncAutoResetEvent();
                     Response<ItemsCollection<Repository>> result = null;
                     RepositoriesLoadTask = MvxNotifyTask.Create(async () =>
                     {
-                        result = await GetRepositories(searchPhrase, 1, token);
-                        resetEvent.Set();
+                        result = await GetRepositories(searchPhrase, 1);
+                        searchDoneEvent.Set();
+                        await itemsChangedDoneEvent.WaitAsync();
+                        await Task.Delay(50);
+                        if (!result.IsSuccess)
+                        {
+                            throw new Exception(result.FormattedErrorMessages);
+                        }
                     });
-                    await resetEvent.WaitAsync(token);
-                    return result;
-                })).Switch().Subscribe(response =>
+                    await searchDoneEvent.WaitAsync(token);
+                    return (Result: result, ItemsChangedDoneEvent: itemsChangedDoneEvent);
+                })).Switch().Subscribe(observer =>
                 {
-                    if (response.IsSuccess)
+                    try
                     {
                         ResetPageCounters();
-                        Repositories = new MvxObservableCollection<Repository>(response.Results.Items);
-                        _totalCount = response.Results.TotalCount;
-                        HasMoreItems = _totalCount > Constants.RefitPerPage;
-                        RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.FromResult(0); });
+                        if (observer.Result.IsSuccess)
+                        {
+                            Repositories = new MvxObservableCollection<Repository>(observer.Result.Results.Items);
+                            _totalCount = observer.Result.Results.TotalCount;
+                            HasMoreItems = _totalCount > Constants.RefitPerPage;
+                        }
+                        else
+                        {
+                            Repositories = new MvxObservableCollection<Repository>();
+                            _totalCount = 0;
+                            HasMoreItems = false;
+                        }
                     }
-                    else
+                    finally
                     {
-                        ResetPageCounters();
-                        Repositories = new MvxObservableCollection<Repository>();
-                        _totalCount = 0;
-                        RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.FromException(new Exception(response.FormattedErrorMessages)); });
+                        observer.ItemsChangedDoneEvent.Set();
                     }
                 });
         }
+
+        public IMvxCommand RefreshCommand => new MvxCommand(
+            () =>
+            {
+            });
 
         public IMvxCommand GotoPullRequestsCommand => new MvxCommand<Repository>(
             repository => { _navigationService.Navigate<PullRequestsViewModel, Repository>(repository); });
@@ -137,7 +156,7 @@ namespace Challenge.ViewModels
         private async Task LoadRepositories()
         {
             ResetPageCounters();
-            var response = await GetRepositories(string.Empty, _page);
+            var response = await GetRepositories(SearchPhrase, _page);
             if (response.IsSuccess)
             {
                 Repositories = new MvxObservableCollection<Repository>(response.Results.Items);
@@ -165,6 +184,10 @@ namespace Challenge.ViewModels
                             perPage,
                             searchPhrase,
                             cancellationToken));
+                if (response.IsSuccess && !response.Results.Items.Any())
+                {
+                    throw new Exception(Resources.Texts.NoResultsFound);
+                }
                 return response;
             }
             catch (Exception e)

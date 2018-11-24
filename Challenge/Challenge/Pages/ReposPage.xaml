@@ -27,6 +27,8 @@
                 <Label Text="{Binding RepositoriesLoadTask.ErrorMessage}"
                        TextColor="Black"
                        FontSize="24"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
                        VerticalOptions="CenterAndExpand" 
                        HorizontalOptions="CenterAndExpand" />
             </StackLayout>
@@ -40,12 +42,6 @@
                         BackgroundColor="{StaticResource SearchBackgroundColor}"
                         HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </Frame>
-                <Label x:Name="NoResultsFoundLabel"
-                       IsVisible="{Binding Repositories, Converter={StaticResource CollectionToIsEmptyValueConverter}}"
-                       TextColor="Black"
-                       FontSize="24"
-                       VerticalOptions="Start"
-                       HorizontalOptions="CenterAndExpand" />
                 <incrementalLoading:IncrementalListView
                     x:Name="RepoListView"
                     PreloadCount="10"
@@ -53,7 +49,7 @@
                     IsVisible="{Binding RepositoriesLoadTask.IsSuccessfullyCompleted}"
                     ItemsSource="{Binding Repositories}" 
                     HorizontalOptions="Fill"
-                    VerticalOptions="StartAndExpand"
+                    VerticalOptions="Fill"
                     ItemClickCommand="{Binding GotoPullRequestsCommand}"
                     RowHeight="100">
                     <ListView.ItemTemplate>

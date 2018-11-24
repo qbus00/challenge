@@ -13,7 +13,6 @@ namespace Challenge.Pages
         {
             InitializeComponent();
             SearchBar.Placeholder = Challenge.Resources.Texts.SearchPlaceholder;
-            NoResultsFoundLabel.Text = Challenge.Resources.Texts.NoResultsFound;
         }
 
         private void RepoListView_OnPropertyChanged(object sender, PropertyChangedEventArgs e)

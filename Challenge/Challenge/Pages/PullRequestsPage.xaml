@@ -26,18 +26,14 @@
                 <Label Text="{Binding PullRequestsLoadTask.ErrorMessage}"
                        TextColor="Black"
                        FontSize="24"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
                        VerticalOptions="CenterAndExpand" 
                        HorizontalOptions="CenterAndExpand" />
             </StackLayout>
             <StackLayout Orientation="Vertical"
                          AbsoluteLayout.LayoutBounds="0,0,1,1" 
                          AbsoluteLayout.LayoutFlags="All">
-                <Label x:Name="NoResultsFoundLabel"
-                       IsVisible="{Binding PullRequests, Converter={StaticResource CollectionToIsEmptyValueConverter}}"
-                       TextColor="Black"
-                       FontSize="24"
-                       VerticalOptions="Start"
-                       HorizontalOptions="CenterAndExpand" />
                 <incrementalLoading:IncrementalListView
                     x:Name="RepoListView"
                     PreloadCount="10"

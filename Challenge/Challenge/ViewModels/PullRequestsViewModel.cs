@@ -29,6 +29,7 @@ namespace Challenge.ViewModels
         }
 
         private MvxObservableCollection<PullRequest> _pullRequests;
+
         public MvxObservableCollection<PullRequest> PullRequests
         {
             get => _pullRequests;
@@ -38,6 +39,7 @@ namespace Challenge.ViewModels
         public int PageSize { get; set; } = Constants.RefitPerPage;
 
         private MvxNotifyTask _loadMoreTask;
+
         public MvxNotifyTask LoadMoreTask
         {
             get => _loadMoreTask;
@@ -45,6 +47,7 @@ namespace Challenge.ViewModels
         }
 
         private bool _hasMoreItems;
+
         public bool HasMoreItems
         {
             get => _hasMoreItems;
@@ -52,6 +55,7 @@ namespace Challenge.ViewModels
         }
 
         private MvxNotifyTask _pullRequestsLoadTask;
+
         public MvxNotifyTask PullRequestsLoadTask
         {
             get => _pullRequestsLoadTask;
@@ -86,7 +90,7 @@ namespace Challenge.ViewModels
 
         public override void Prepare(Repository parameter)
         {
-            Repository= parameter;
+            Repository = parameter;
             PullRequestsLoadTask = MvxNotifyTask.Create(async () => await LoadPullRequests());
         }
 
@@ -133,7 +137,7 @@ namespace Challenge.ViewModels
             {
                 var perPage = Constants.RefitPerPage;
                 var cacheKey = new PullRequestsCacheKey {Page = page, Repo = repo, User = user}.ToString();
-                var response = 
+                var response =
                     await _restService.Execute<IGitHubApi, IEnumerable<PullRequest>>(
                         api => api.GetPullRequests(
                             cacheKey,
@@ -142,6 +146,11 @@ namespace Challenge.ViewModels
                             user,
                             repo,
                             cancellationToken));
+                if (response.IsSuccess && !response.Results.Any())
+                {
+                    throw new Exception(Resources.Texts.NoResultsFound);
+                }
+
                 return response;
             }
             catch (Exception e)
