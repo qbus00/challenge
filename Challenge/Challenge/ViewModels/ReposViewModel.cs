@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ using Challenge.Model;
 using Challenge.Rest;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
+using Nito.AsyncEx;
 using Refit.Insane.PowerPack.Data;
 using Refit.Insane.PowerPack.Services;
 using Xamarin.Forms;
@@ -83,8 +85,14 @@ namespace Challenge.ViewModels
                 .DistinctUntilChanged()
                 .Select(searchPhrase => Observable.FromAsync(async token =>
                 {
-                    RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.Delay(TimeSpan.FromHours(1), token); });
-                    var result = await GetRepositories(searchPhrase, 1, token);
+                    var resetEvent = new AsyncAutoResetEvent();
+                    Response<ItemsCollection<Repository>> result = null;
+                    RepositoriesLoadTask = MvxNotifyTask.Create(async () =>
+                    {
+                        result = await GetRepositories(searchPhrase, 1, token);
+                        resetEvent.Set();
+                    });
+                    await resetEvent.WaitAsync(token);
                     return result;
                 })).Switch().Subscribe(response =>
                 {
@@ -94,11 +102,6 @@ namespace Challenge.ViewModels
                         Repositories = new MvxObservableCollection<Repository>(response.Results.Items);
                         _totalCount = response.Results.TotalCount;
                         HasMoreItems = _totalCount > Constants.RefitPerPage;
-                        if (Repositories?.Count > 0)
-                        {
-                            MessagingCenter.Send(Repositories[0], Constants.ScrollToTopMessage);
-                        }
-
                         RepositoriesLoadTask = MvxNotifyTask.Create(async () => { await Task.FromResult(0); });
                     }
                     else

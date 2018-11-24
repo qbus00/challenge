@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Challenge.Model;
 using Challenge.ViewModels;
@@ -17,23 +18,15 @@ namespace Challenge.Pages
             SearchBar.Placeholder = Challenge.Resources.Texts.SearchPlaceholder;
         }
 
-        protected override void OnAppearing()
+        private void RepoListView_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            base.OnAppearing();
-            MessagingCenter.Subscribe<Repository>(this, Constants.ScrollToTopMessage, repository =>
+            if (e.PropertyName == nameof(RepoListView.ItemsSource))
             {
-                Device.BeginInvokeOnMainThread(async () =>
+                if (ViewModel?.Repositories?.Count > 0)
                 {
-                    await Task.Delay(100);
-                    RepoListView.ScrollTo(repository, ScrollToPosition.Start, false);
-                });
-            });
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            MessagingCenter.Unsubscribe<object>(this, Constants.ScrollToTopMessage);
+                    RepoListView.ScrollTo(ViewModel.Repositories[0], ScrollToPosition.Start, false);
+                }
+            }
         }
     }
 }

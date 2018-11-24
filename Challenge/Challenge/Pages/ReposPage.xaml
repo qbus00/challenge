@@ -42,6 +42,7 @@
                 <incrementalLoading:IncrementalListView
                     x:Name="RepoListView"
                     PreloadCount="10"
+                    PropertyChanged="RepoListView_OnPropertyChanged"
                     IsVisible="{Binding RepositoriesLoadTask.IsSuccessfullyCompleted}"
                     ItemsSource="{Binding Repositories}" 
                     HorizontalOptions="Fill"
