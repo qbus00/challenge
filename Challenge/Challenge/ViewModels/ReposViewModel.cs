@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Threading;
@@ -12,7 +11,6 @@ using MvvmCross.ViewModels;
 using Nito.AsyncEx;
 using Refit.Insane.PowerPack.Data;
 using Refit.Insane.PowerPack.Services;
-using Xamarin.Forms;
 
 namespace Challenge.ViewModels
 {
