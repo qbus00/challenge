@@ -12,6 +12,8 @@ namespace Challenge.Droid
     {
         protected override void OnCreate(Bundle bundle)
         {
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(false);
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
             base.OnCreate(bundle);

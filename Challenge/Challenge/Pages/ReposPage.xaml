@@ -9,6 +9,9 @@
              x:DataContext="{blend:DesignInstance viewModels:ReposViewModel}"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:incrementalLoading="clr-namespace:Challenge.IncrementalLoading;assembly=Challenge"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:xres="clr-namespace:Challenge;assembly=Challenge"
              x:Class="Challenge.Pages.ReposPage"
              Title="{Binding Title}"
              Icon="ico_menu.png">
@@ -83,6 +86,22 @@
                                                 <Image Source="star.png" WidthRequest="{StaticResource ImageSize}" HeightRequest="{StaticResource ImageSize}"/>
                                                 <Label TextColor="{StaticResource StarForkColor}" FontSize="{StaticResource StarForkFontSize}" Text="{Binding StargazersCount}"/>
                                             </StackLayout>
+                                        </StackLayout>
+                                        <StackLayout Grid.Column="1" 
+                                                     VerticalOptions="CenterAndExpand" 
+                                                     HorizontalOptions="CenterAndExpand">
+                                            <forms:CachedImage HorizontalOptions="Center" VerticalOptions="Center"
+                                                                        WidthRequest="100" HeightRequest="100"
+                                                                        DownsampleToViewSize="true"
+                                                                        LoadingPlaceholder="avatar.jpg"
+                                                                        ErrorPlaceholder="avatar.jpg"
+                                                                        FadeAnimationEnabled="True"
+                                                                        CacheDuration="{x:Static xres:Constants.AvatarImageCacheDuration}"
+                                                                        Source="{Binding Owner.AvatarUrl}">
+                                                <forms:CachedImage.Transformations>
+                                                    <transformations:CircleTransformation />
+                                                </forms:CachedImage.Transformations>
+                                            </forms:CachedImage>
                                         </StackLayout>
                                     </Grid>
                                     <BoxView Margin="20,0,0,0" HeightRequest="0.5" Color="Gray"/>

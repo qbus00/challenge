@@ -1,4 +1,6 @@
-﻿namespace Challenge
+﻿using System;
+
+namespace Challenge
 {
     public class Constants
     {
@@ -6,5 +8,7 @@
         public const int RefitPreloadPerPage = RefitPerPage - 10 < 0 ? 1 : RefitPerPage - 10;
         public const int RefitCacheInSeconds = 60 * 15;
         public const int SearchThrottlingInMiliseconds = 300;
+
+        public static readonly TimeSpan? AvatarImageCacheDuration = TimeSpan.FromDays(1);
     }
 }
