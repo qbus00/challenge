@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Challenge.IncrementalLoading;
 using Challenge.Model;
 using Challenge.Rest;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.WebBrowser;
 using MvvmCross.ViewModels;
+using Refit.Insane.PowerPack.Caching;
 using Refit.Insane.PowerPack.Data;
 using Refit.Insane.PowerPack.Services;
 
@@ -21,11 +23,63 @@ namespace Challenge.ViewModels
 
         private int _page = 1;
 
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
         private void ResetPageCounters()
         {
             HasMoreItems = false;
             LoadMoreTask = null;
             _page = 1;
+        }
+
+        public IMvxCommand RefreshCommand => new MvxAsyncCommand(
+            async () =>
+            {
+                IsRefreshing = true;
+                try
+                {
+                    await ClearRepositoriesCache();
+                    await LoadPullRequests();
+                }
+                catch (Exception e)
+                {
+                    ResetPullRequests();
+                    PullRequestsLoadTask = MvxNotifyTask.Create(Task.FromException(e));
+                }
+                finally
+                {
+                    IsRefreshing = false;
+                }
+            });
+
+        private async Task ClearRepositoriesCache()
+        {
+            for (var i = 1; i <= 1000 / Constants.RefitPerPage; i++)
+            {
+                var page = i;
+                var perPage = Constants.RefitPerPage;
+                var user = Repository.Owner.Login;
+                var repo = Repository.Name;
+                var cacheKey = new PullRequestsCacheKey {Page = page, Repo = repo, User = user}.ToString();
+                await RefitCacheService.Instance.ClearCache<IGitHubApi, IEnumerable<PullRequest>>(
+                    api => api.GetPullRequests(
+                        cacheKey,
+                        page,
+                        perPage,
+                        user,
+                        repo, default(CancellationToken)));
+            }
+        }
+
+        private void ResetPullRequests()
+        {
+            PullRequests = new MvxObservableCollection<PullRequest>();
+            ResetPageCounters();
         }
 
         private MvxObservableCollection<PullRequest> _pullRequests;

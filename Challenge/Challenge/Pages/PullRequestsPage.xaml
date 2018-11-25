@@ -35,9 +35,11 @@
                          AbsoluteLayout.LayoutBounds="0,0,1,1" 
                          AbsoluteLayout.LayoutFlags="All">
                 <incrementalLoading:IncrementalListView
-                    x:Name="RepoListView"
-                    PreloadCount="10"
-                    IsVisible="{Binding PullRequestsLoadTask.IsSuccessfullyCompleted}"
+                    x:Name="PullRequestsListView"
+                    IsPullToRefreshEnabled="True"
+                    IsVisible="{Binding PullRequests, Converter={StaticResource CollectionToIsNotEmptyValueConverter}}"
+                    IsRefreshing="{Binding IsRefreshing}"
+                    RefreshCommand="{Binding RefreshCommand}"
                     ItemClickCommand="{Binding OpenPullRequestsInBrowserCommand}"
                     ItemsSource="{Binding PullRequests}" 
                     HorizontalOptions="Fill"

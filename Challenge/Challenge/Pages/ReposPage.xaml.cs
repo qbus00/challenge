@@ -12,6 +12,7 @@ namespace Challenge.Pages
         public ReposPage()
         {
             InitializeComponent();
+            RepoListView.PreloadCount = Constants.RefitPreloadPerPage;
             SearchBar.Placeholder = Challenge.Resources.Texts.SearchPlaceholder;
         }
 

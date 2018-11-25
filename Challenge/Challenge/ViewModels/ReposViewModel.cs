@@ -11,9 +11,9 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Nito.AsyncEx;
+using Refit.Insane.PowerPack.Caching;
 using Refit.Insane.PowerPack.Data;
 using Refit.Insane.PowerPack.Services;
-using Xamarin.Forms;
 
 namespace Challenge.ViewModels
 {
@@ -28,6 +28,13 @@ namespace Challenge.ViewModels
         {
             get => _searchPhrase;
             set => SetProperty(ref _searchPhrase, value);
+        }
+
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
         }
 
         private MvxNotifyTask _repositoriesLoadTask;
@@ -92,12 +99,14 @@ namespace Challenge.ViewModels
                     Response<ItemsCollection<Repository>> result = null;
                     RepositoriesLoadTask = MvxNotifyTask.Create(async () =>
                     {
+                        ResetRepositories();
                         result = await GetRepositories(searchPhrase, 1);
                         searchDoneEvent.Set();
                         await itemsChangedDoneEvent.WaitAsync();
                         await Task.Delay(50);
                         if (!result.IsSuccess)
                         {
+                            ResetRepositories();
                             throw new Exception(result.FormattedErrorMessages);
                         }
                     });
@@ -114,12 +123,6 @@ namespace Challenge.ViewModels
                             _totalCount = observer.Result.Results.TotalCount;
                             HasMoreItems = _totalCount > Constants.RefitPerPage;
                         }
-                        else
-                        {
-                            Repositories = new MvxObservableCollection<Repository>();
-                            _totalCount = 0;
-                            HasMoreItems = false;
-                        }
                     }
                     finally
                     {
@@ -128,10 +131,47 @@ namespace Challenge.ViewModels
                 });
         }
 
-        public IMvxCommand RefreshCommand => new MvxCommand(
-            () =>
+        private void ResetRepositories()
+        {
+            Repositories = new MvxObservableCollection<Repository>();
+            ResetPageCounters();
+        }
+
+        public IMvxCommand RefreshCommand => new MvxAsyncCommand(
+            async () =>
             {
+                IsRefreshing = true;
+                try
+                {
+                    await ClearRepositoriesCache();
+                    await LoadRepositories();
+                }
+                catch (Exception e)
+                {
+                    ResetRepositories();
+                    RepositoriesLoadTask = MvxNotifyTask.Create(Task.FromException(e));
+                }
+                finally
+                {
+                    IsRefreshing = false;
+                }
             });
+
+        private async Task ClearRepositoriesCache()
+        {
+            for (var i = 1; i <= 1000 / Constants.RefitPerPage; i++)
+            {
+                var page = i;
+                var cacheKey = new QueryCacheKey {Page = i, SearchPhrase = SearchPhrase}.ToString();
+                var perPage = Constants.RefitPerPage;
+                await RefitCacheService.Instance.ClearCache<IGitHubApi, ItemsCollection<Repository>>(
+                    api => api.GetRepositories(
+                        cacheKey,
+                        page,
+                        perPage,
+                        SearchPhrase, default(CancellationToken)));
+            }
+        }
 
         public IMvxCommand GotoPullRequestsCommand => new MvxCommand<Repository>(
             repository => { _navigationService.Navigate<PullRequestsViewModel, Repository>(repository); });
@@ -141,7 +181,7 @@ namespace Challenge.ViewModels
 
         public string Title => Resources.Texts.MainPageTitle;
 
-        public ReposViewModel(IRestService restService, IMvxNavigationService navigationService)
+        public ReposViewModel(IRestService restService, IMvxNavigationService navigationService, IPersistedCache refitCache)
         {
             _restService = restService;
             _navigationService = navigationService;

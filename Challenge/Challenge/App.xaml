@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:valueConverters="clr-namespace:Challenge.ValueConverters;assembly=Challenge"
              x:Class="Challenge.App">
-    <Application.Resources>
-        <Color x:Key="SearchBackgroundColor">#E7E7E7</Color>
-        <Color x:Key="BarBackgroundColor">#94BD6F</Color>
-        <Color x:Key="BarTextColor">#FFFFFF</Color>
-        <Style ApplyToDerivedTypes="true" TargetType="NavigationPage">
-            <Setter Property="BarBackgroundColor" Value="{StaticResource BarBackgroundColor}"/>
-            <Setter Property="BarTextColor" Value="{StaticResource BarTextColor}"/>
-        </Style>
-    </Application.Resources>
+  <Application.Resources>
+    <Color x:Key="SearchBackgroundColor">#E7E7E7</Color>
+    <Color x:Key="BarBackgroundColor">#94BD6F</Color>
+    <Color x:Key="BarTextColor">#FFFFFF</Color>
+    <Style ApplyToDerivedTypes="true" TargetType="NavigationPage">
+      <Setter Property="BarBackgroundColor" Value="{StaticResource BarBackgroundColor}"/>
+      <Setter Property="BarTextColor" Value="{StaticResource BarTextColor}"/>
+    </Style>
+    <valueConverters:CollectionToIsNotEmptyValueConverter x:Key="CollectionToIsNotEmptyValueConverter"/>
+  </Application.Resources>
 </Application>

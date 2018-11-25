@@ -7,10 +7,11 @@ namespace Challenge.Pages
     [MvxMasterDetailPagePresentation]
 
     public partial class PullRequestsPage : MvxContentPage<PullRequestsViewModel>
-	{
-		public PullRequestsPage ()
-		{
-			InitializeComponent ();
+    {
+        public PullRequestsPage()
+        {
+            InitializeComponent();
+            PullRequestsListView.PreloadCount = Constants.RefitPreloadPerPage;
         }
     }
 }
