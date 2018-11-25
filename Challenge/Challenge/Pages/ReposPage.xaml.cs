@@ -13,6 +13,7 @@ namespace Challenge.Pages
         {
             InitializeComponent();
             RepoListView.PreloadCount = Constants.RefitPreloadPerPage;
+
             SearchBar.Placeholder = Challenge.Resources.Texts.SearchPlaceholder;
         }
 
@@ -22,7 +23,9 @@ namespace Challenge.Pages
             {
                 if (ViewModel?.Repositories?.Count > 0)
                 {
-                    RepoListView.ScrollTo(ViewModel.Repositories[0], ScrollToPosition.Start, false);
+                    RepoListView.ScrollTo(ViewModel.Repositories[0],
+                        Device.RuntimePlatform == Device.iOS ? ScrollToPosition.End : ScrollToPosition.Start, 
+                        Device.RuntimePlatform == Device.iOS);
                 }
             }
         }

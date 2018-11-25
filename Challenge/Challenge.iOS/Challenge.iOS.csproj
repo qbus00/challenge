@@ -179,4 +179,22 @@
   <ItemGroup>
     <BundleResource Include="Resources\ico_menu%403x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\star%402.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\star%403.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fork.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fork%402.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fork%403.png" />
+  </ItemGroup>
 </Project>

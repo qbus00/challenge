@@ -53,14 +53,39 @@
                     HorizontalOptions="Fill"
                     VerticalOptions="Fill"
                     ItemClickCommand="{Binding GotoPullRequestsCommand}"
-                    RowHeight="100">
+                    SeparatorVisibility="None"
+                    HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Orientation="Vertical"
-                                             Padding="10">
-                                    <Label Text="{Binding Name}" TextColor="DeepSkyBlue" FontSize="Large" LineBreakMode="TailTruncation" WidthRequest="400"/>
-                                    <Label Text="{Binding Description}" TextColor="DarkGray" FontSize="Medium" LineBreakMode="TailTruncation" WidthRequest="400"/>
+                                <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill" Orientation="Vertical">
+                                    <Grid Padding="20, 10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout 
+                                        Grid.Column="0" Grid.Row="0"
+                                        VerticalOptions="Fill" Orientation="Vertical">
+                                            <Label Text="{Binding Name}" TextColor="{StaticResource TitleColor}" 
+                                           FontSize="{StaticResource TitleFontSize}" 
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation"
+                                           HorizontalOptions="StartAndExpand"/>
+                                            <Label Text="{Binding Description}" TextColor="{StaticResource DescriptionColor}" 
+                                           FontSize="{StaticResource DescriptionFontSize}" 
+                                           MaxLines="2"
+                                           LineBreakMode="TailTruncation"
+                                           HorizontalOptions="Fill"/>
+                                            <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+                                                <Image Source="fork.png" WidthRequest="{StaticResource ImageSize}" HeightRequest="{StaticResource ImageSize}"/>
+                                                <Label TextColor="{StaticResource StarForkColor}" FontSize="{StaticResource StarForkFontSize}" Text="{Binding ForksCount}" Margin="0, 0, 6, 0"/>
+                                                <Image Source="star.png" WidthRequest="{StaticResource ImageSize}" HeightRequest="{StaticResource ImageSize}"/>
+                                                <Label TextColor="{StaticResource StarForkColor}" FontSize="{StaticResource StarForkFontSize}" Text="{Binding StargazersCount}"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Grid>
+                                    <BoxView Margin="20,0,0,0" HeightRequest="0.5" Color="Gray"/>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
@@ -71,6 +96,11 @@
                             IsRunning="{Binding LoadMoreTask.IsNotCompleted}" 
                             IsVisible="{Binding LoadMoreTask.IsNotCompleted}"/>
                     </ListView.Footer>
+                    <incrementalLoading:IncrementalListView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <On Platform="iOS" Value="0, 10, 0, 0"/>
+                        </OnPlatform>
+                    </incrementalLoading:IncrementalListView.Margin>
                 </incrementalLoading:IncrementalListView>
             </StackLayout>
         </AbsoluteLayout>
