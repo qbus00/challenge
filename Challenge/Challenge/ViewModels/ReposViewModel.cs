@@ -181,7 +181,7 @@ namespace Challenge.ViewModels
 
         public string Title => Resources.Texts.MainPageTitle;
 
-        public ReposViewModel(IRestService restService, IMvxNavigationService navigationService, IPersistedCache refitCache)
+        public ReposViewModel(IRestService restService, IMvxNavigationService navigationService)
         {
             _restService = restService;
             _navigationService = navigationService;

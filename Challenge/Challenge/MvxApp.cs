@@ -15,7 +15,6 @@ namespace Challenge
         public override void Initialize()
         {
             BaseApiConfiguration.ApiUri = new Uri("https://api.github.com");
-            Mvx.IoCProvider.RegisterType<IPersistedCache, AkavachePersistedCache>();
             Mvx.IoCProvider.RegisterType(() =>
             {
                 var restServiceBuilder = new RestServiceBuilder();

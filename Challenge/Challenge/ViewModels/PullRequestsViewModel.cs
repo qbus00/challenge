@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Challenge.IncrementalLoading;
 using Challenge.Model;
 using Challenge.Rest;
-using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.WebBrowser;
 using MvvmCross.ViewModels;
