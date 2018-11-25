@@ -12,8 +12,10 @@
         <Color x:Key="DescriptionColor">#B5B5B5</Color>
         <x:Double x:Key="TitleFontSize">20</x:Double>
         <x:Double x:Key="DescriptionFontSize">12</x:Double>
+        <x:Double x:Key="UsernameFontSize">14</x:Double>
         <x:Double x:Key="StarForkFontSize">18</x:Double>
-        <x:Double x:Key="ImageSize">20</x:Double>
+        <x:Double x:Key="RepoBottomIconSize">20</x:Double>
+        <x:Double x:Key="RepoAvatarImageSize">30</x:Double>
         <Style ApplyToDerivedTypes="true" TargetType="NavigationPage">
             <Setter Property="BarBackgroundColor" Value="{StaticResource BarBackgroundColor}"/>
             <Setter Property="BarTextColor" Value="{StaticResource BarTextColor}"/>
