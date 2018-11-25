@@ -21,5 +21,8 @@
             <Setter Property="BarTextColor" Value="{StaticResource BarTextColor}"/>
         </Style>
         <valueConverters:CollectionToIsNotEmptyValueConverter x:Key="CollectionToIsNotEmptyValueConverter"/>
+        <Style ApplyToDerivedTypes="true" TargetType="ContentPage">
+            <Setter Property="NavigationPage.BackButtonTitle" Value="" />
+        </Style>
     </Application.Resources>
 </Application>

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:xres="clr-namespace:Challenge;assembly=Challenge"
+             xmlns:blend="http://schemas.microsoft.com/expression/blend/2008"
+             x:DataContext="{blend:DesignInstance model:Repository}"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:model="clr-namespace:Challenge.Model;assembly=Challenge"
+             x:Class="Challenge.Cells.RepositoryCell">
+  <ContentView.Content>
+        <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill" Orientation="Vertical">
+            <Grid Padding="20, 10" ColumnSpacing="10" RowSpacing="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <StackLayout 
+                                        Grid.Column="0" Grid.Row="0"
+                                        VerticalOptions="Fill" Orientation="Vertical">
+                    <Label Text="{Binding Name}" TextColor="{StaticResource TitleColor}" 
+                                           FontSize="{StaticResource TitleFontSize}" 
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation"
+                                           HorizontalOptions="StartAndExpand"/>
+                    <Label Text="{Binding Description}" TextColor="{StaticResource DescriptionColor}" 
+                                           FontSize="{StaticResource DescriptionFontSize}" 
+                                           MaxLines="2"
+                                           LineBreakMode="TailTruncation"
+                                           HorizontalOptions="Fill"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+                        <Image Source="fork.png" WidthRequest="{StaticResource RepoBottomIconSize}" HeightRequest="{StaticResource RepoBottomIconSize}"/>
+                        <Label TextColor="{StaticResource StarForkColor}" FontSize="{StaticResource StarForkFontSize}" Text="{Binding ForksCount}" Margin="0, 0, 6, 0"/>
+                        <Image Source="star.png" WidthRequest="{StaticResource RepoBottomIconSize}" HeightRequest="{StaticResource RepoBottomIconSize}"/>
+                        <Label TextColor="{StaticResource StarForkColor}" FontSize="{StaticResource StarForkFontSize}" Text="{Binding StargazersCount}"/>
+                    </StackLayout>
+                </StackLayout>
+                <AbsoluteLayout Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <StackLayout
+                                            AbsoluteLayout.LayoutFlags="PositionProportional"
+                                            AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1">
+                        <forms:CachedImage HorizontalOptions="Center" VerticalOptions="Center"
+                                                                        WidthRequest="{StaticResource RepoAvatarImageSize}" 
+                                                                        HeightRequest="{StaticResource RepoAvatarImageSize}"
+                                                                        DownsampleToViewSize="true"
+                                                                        LoadingPlaceholder="avatar.jpg"
+                                                                        ErrorPlaceholder="avatar.jpg"
+                                                                        FadeAnimationEnabled="True"
+                                                                        CacheDuration="{x:Static xres:Constants.AvatarImageCacheDuration}"
+                                                                        Source="{Binding Owner.AvatarUrl}">
+                            <forms:CachedImage.Transformations>
+                                <transformations:CircleTransformation />
+                            </forms:CachedImage.Transformations>
+                        </forms:CachedImage>
+                        <Label Text="{Binding Owner.Login}" 
+                                                   HorizontalOptions="Fill"
+                                                   VerticalOptions="Center"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   TextColor="{StaticResource TitleColor}"
+                                                   FontSize="{StaticResource UsernameFontSize}"
+                                                   MaxLines="1"
+                                                   LineBreakMode="TailTruncation"/>
+                    </StackLayout>
+                </AbsoluteLayout>
+            </Grid>
+            <BoxView Margin="20,0,0,0" HeightRequest="0.5" Color="Gray"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
