@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Challenge.Model
 {
@@ -15,5 +16,8 @@ namespace Challenge.Model
 
         [JsonProperty("user")]
         public User User { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
     }
 }

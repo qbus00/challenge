@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:blend="http://schemas.microsoft.com/expression/blend/2008"
+             x:DataContext="{blend:DesignInstance model:PullRequest}"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:model="clr-namespace:Challenge.Model;assembly=Challenge"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:xres="clr-namespace:Challenge;assembly=Challenge"
+             x:Class="Challenge.Cells.PullRequestCell">
+    <ContentView.Content>
+        <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill" Orientation="Vertical">
+            <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill" Orientation="Vertical"
+                   Padding="20, 10">
+                <Label Text="{Binding Title}" TextColor="{StaticResource TitleColor}" 
+                 FontSize="{StaticResource TitleFontSize}" 
+                 MaxLines="2"
+                 LineBreakMode="TailTruncation"
+                 HorizontalOptions="StartAndExpand"/>
+                <Grid Margin="0,7,0,0" HorizontalOptions="Fill" VerticalOptions="Fill" ColumnSpacing="10" RowSpacing="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="9*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <AbsoluteLayout Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Fill">
+                        <forms:CachedImage 
+                                       AbsoluteLayout.LayoutFlags="PositionProportional"
+                                       AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1"
+                                       WidthRequest="{StaticResource PullRequestAvatarImageSize}" 
+                                       HeightRequest="{StaticResource RepoAvatarImageSize}"
+                                       DownsampleToViewSize="true"
+                                       LoadingPlaceholder="avatar.jpg"
+                                       ErrorPlaceholder="avatar.jpg"
+                                       FadeAnimationEnabled="True"
+                                       CacheDuration="{x:Static xres:Constants.AvatarImageCacheDuration}"
+                                       Source="{Binding User.AvatarUrl}">
+                            <forms:CachedImage.Transformations>
+                                <transformations:CircleTransformation />
+                            </forms:CachedImage.Transformations>
+                        </forms:CachedImage>
+                    </AbsoluteLayout>
+                    <AbsoluteLayout Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Fill">
+                        <StackLayout AbsoluteLayout.LayoutFlags="PositionProportional"
+                            AbsoluteLayout.LayoutBounds="0.0, 0.5, -1, -1" Spacing="3" Orientation="Vertical">
+                            <Label Text="{Binding User.Login}" TextColor="{StaticResource TitleColor}" 
+                               FontSize="{StaticResource PullRequestUserFontSize}" 
+                               MaxLines="1"
+                               LineBreakMode="TailTruncation"
+                               HorizontalOptions="StartAndExpand"/>
+                            <Label Text="{Binding CreatedAt, Converter={StaticResource DateTimeToHumanizerConverter}}" 
+                                   TextColor="{StaticResource DescriptionColor}" 
+                               FontSize="{StaticResource PullRequestDateFontSize}" 
+                               MaxLines="1"
+                               LineBreakMode="TailTruncation"
+                               HorizontalOptions="StartAndExpand"/>
+                        </StackLayout>
+                    </AbsoluteLayout>
+                </Grid>
+            </StackLayout>
+            <BoxView Margin="20,0,0,0" HeightRequest="0.5" Color="Gray"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

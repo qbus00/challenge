@@ -9,6 +9,7 @@
     x:DataContext="{blend:DesignInstance viewModels:PullRequestsViewModel}"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:incrementalLoading="clr-namespace:Challenge.IncrementalLoading;assembly=Challenge"
+    xmlns:cells="clr-namespace:Challenge.Cells;assembly=Challenge"
     x:Class="Challenge.Pages.PullRequestsPage"
     Title="{Binding Repository.Name}">
     <ContentPage.Content>
@@ -32,6 +33,7 @@
                        HorizontalOptions="CenterAndExpand" />
             </StackLayout>
             <StackLayout Orientation="Vertical"
+                         Spacing="0"
                          AbsoluteLayout.LayoutBounds="0,0,1,1" 
                          AbsoluteLayout.LayoutFlags="All">
                 <incrementalLoading:IncrementalListView
@@ -43,16 +45,13 @@
                     ItemClickCommand="{Binding OpenPullRequestsInBrowserCommand}"
                     ItemsSource="{Binding PullRequests}" 
                     HorizontalOptions="Fill"
+                    SeparatorVisibility="None"
                     VerticalOptions="StartAndExpand"
-                    RowHeight="100">
+                    HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout HorizontalOptions="Fill" VerticalOptions="CenterAndExpand" Orientation="Vertical"
-                                             Padding="10">
-                                    <Label Text="{Binding Title}" TextColor="DeepSkyBlue" FontSize="Large" LineBreakMode="TailTruncation" WidthRequest="400"/>
-                                    <Label Text="{Binding User.Login}" TextColor="DarkGray" FontSize="Medium" LineBreakMode="TailTruncation" WidthRequest="400"/>
-                                </StackLayout>
+                                <cells:PullRequestCell BindingContext="{Binding .}"/>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
