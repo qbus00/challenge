@@ -1,26 +1,25 @@
 ﻿using System;
-using System.Collections;
 using System.Globalization;
-using System.Linq;
+using Humanizer;
 using Xamarin.Forms;
 
 namespace Challenge.ValueConverters
 {
-    public class CollectionToIsNotEmptyValueConverter : IValueConverter
+    public class DateTimeToHumanizerConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is IEnumerable enumerable)
+            if (value is DateTime dateTime)
             {
-                return enumerable.Cast<object>().Any();
+                return dateTime.Humanize(culture: CultureInfo.CurrentUICulture);
             }
-
-            return false;
+            return "-";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
+
     }
 }
